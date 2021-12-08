@@ -1,0 +1,85 @@
+<script src="/js/HcodeFileReader.js"></script>
+<script src="/js/HcodeFormSave.js"></script>
+<script src="/js/HcodeGrid.js"></script>
+
+<script>
+
+    new HcodeFileReader('#modal-create [tpe=file]', "#modal-create img")
+    new HcodeFileReader('#modal-create [tpe=file]', "#modal-update img")
+
+    //CÓDIGO MELHORADO - PARAMETRIZADO
+    new HcodeGrid({
+        //Informações personazalidas
+        deleteURL: '/admin/menus/${data.id}',
+        deleteMessage: 'Deseja realmente excluir o menu ${data.title}?',
+        onUpdateLoad: (form, name, data)=>{
+            let input = form.querySelector(`[name=${name}]`)
+
+                switch (name){
+                    case 'photo':
+                        form.querySelector('img').src = '/'+data[name]
+                    break;
+
+                    default:
+                        if(input) input.value = data[name]
+                }
+        }
+    })
+
+    /*CÓDIGO ANTES
+
+    //INSERINDO UM PRATO
+    let formCreate = document.querySelector('#modal-create form')
+    formCreate.save().then(json =>{
+        window.location.reload() //força uma atualização
+    }).catch(err=>{
+        console.log(err)
+    })
+
+    //ATUALIZAR UM PRATO
+    let formUpdate = document.querySelector('#modal-update form')
+    formUpdate.save().then(json =>{
+        window.location.reload() //força uma atualização
+    }).catch(err=>{
+        console.log(err)
+    })
+
+    //EXCLUIR UM PRATO
+    [...document.querySelectorAll('.btn-delete')].forEach(btn =>{
+        btn.addEventListener('click', e=>{
+            let tr = e.patch.find(el=>{
+                return (el.tagName.toUpperCase() === 'TR')
+            })
+            let data = JSON.parse(tr.dataset.row
+            if(confirm(`Deseja realmente excluir o menu ${data.title}?`)){
+                fetch(`/admin/menus/${data.id}`, {
+                    method:'DELETE'
+                })
+                .then(response => response.json())
+                .then(json =>{ window.location.reload() })
+            }
+        })
+    })
+
+    //ATUALIZAR UM PRATO
+    [...document.querySelectorAll('.btn-update')].forEach(btn =>{
+        btn.addEventListener('click', e =>{
+            let tr = e.patch.find(el=>{
+                return (el.tagName.toUpperCase() === 'TR')
+            })
+            let data = JSON.parse(tr.dataset.row)
+            for(let name in data){
+                switch (name){
+                    case 'photo':
+                        formUpdate.querySelector('img').src = '/'+data[name]
+                    break;
+                    default:
+                        let input = formUpdate.querySelector(`[name=${name}]`)
+                        if(input) input.value = data[name]
+                }
+            }
+            $('#modal-update').modal('show')
+        })
+    })*/
+
+</script>

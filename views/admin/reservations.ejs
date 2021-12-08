@@ -1,0 +1,143 @@
+<script src="/js/moment.min.js"></script>
+<script src=""></script>
+<script src="/js/HcodeFormSave.js"></script>
+<script src="/js/HcodeGrid.js"></script>
+
+<script>//ENVIO DOS FORMULÁRIOS (INSERT E UPDATE)
+
+    //CÓDIGO MELHORADO - PARAMETRIZADO
+    new HcodeGrid({
+        //Informações personazalidas
+        deleteURL: '/admin/reservations/${data.id}',
+        deleteMessage: 'Deseja realmente excluir a reserva de ${data.name}?',
+        onUpdateLoad: (form, name, data)=>{
+            let input = form.querySelector(`[name=${name}]`)
+
+                switch (name){
+                    case 'date':
+                        if(input) input.value = moment(data[name]).format('YYYY-MM-DD') //formata a data e adiciona o valor no input
+                    break;
+
+                    default:
+                        if(input) input.value = data[name]
+                }
+        }
+    })
+
+    let grafico = new Chart(document.querySelector('#chart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+        options: {
+            tooltips: {
+                mode: 'index',
+                intersect: true,
+            },
+            scale: {
+                xAxes: [{
+                    display: true,
+                    labelString: 'Mês'
+                }],
+                yAxes: [{
+                    display: true,
+                    labelString: 'Reservas'
+                }]
+            }
+        }
+    })
+    fetch(`/admin/reservations/chart${window.location.search}`).then(response=> response.json()).then(json =>{
+        grafico.data = {
+            labels: json.months,
+            datasets: [{
+                data: json.values,
+                label: 'Reservas',
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgb(54, 162, 235)',
+                fill: true,
+                pointBackgroundColor: '#FFF'
+            }]
+        }
+
+        grafico.update()
+    })
+    
+
+    /*CÓDIGO ANTES
+
+    //CRIANDO UMA RESERVA
+    let formCreate = document.querySelector('#modal-create form')
+
+    formCreate.save().then(json =>{
+        
+        window.location.reload() //força uma atualização
+    
+    }).catch(err=>{
+        console.log(err)
+    })
+
+    //ATUALIZANDO UMA RESERVA
+    let formUpdate = document.querySelector('#modal-update form')
+
+    formUpdate.save().then(json =>{
+        
+        window.location.reload()
+    
+    }).catch(err=>{
+        console.log(err)
+    })
+
+    //ATUALIZAR UMA RESERVA
+    [...document.querySelectorAll('.btn-update')].forEach(btn =>{
+        btn.addEventListener('click', e =>{
+
+            let tr = e.patch.find(el=>{
+                return (el.tagName.toUpperCase() === 'TR')
+            })
+
+            let data = JSON.parse(tr.dataset.row)
+
+            for(let name in data){
+
+                let input = formUpdate.querySelector(`[name=${name}]`)
+
+                switch (name){
+                    case 'date':
+                        if(input) input.value = moment(data[name]).format('YYYY-MM-DD') //formata a data e adiciona o valor no input
+                    break;
+
+                    default:
+                        if(input) input.value = data[name]
+                }
+            }
+
+            $('#modal-update').modal('show')
+        })
+    })
+
+    //EXCLUIR UMA RESERVA
+    [...document.querySelectorAll('.btn-delete')].forEach(btn =>{
+        btn.addEventListener('click', e=>{
+            
+            let tr = e.patch.find(el=>{
+                return (el.tagName.toUpperCase() === 'TR')
+            })
+
+            let data = JSON.parse(tr.dataset.row)
+
+            if(confirm(`Deseja realmente excluir a reserva de ${data.name}?`)){
+
+                fetch(`/admin/reservations/${data.id}`, {
+                
+                    method:'DELETE'
+                
+                })
+                .then(response => response.json())
+                .then(json =>{ window.location.reload() })
+            }
+        })
+    })*/
+
+
+</script>

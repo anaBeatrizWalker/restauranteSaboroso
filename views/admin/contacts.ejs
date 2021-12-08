@@ -1,0 +1,11 @@
+<script src="/js/HcodeFormSave.js"></script>
+<script src="/js/HcodeGrid.js"></script>
+
+<script>
+
+    new HcodeGrid({
+        deleteURL: '/admin/contacts/${data.id}',
+        deleteMessage: 'Deseja realmente exlcuir o contato ${data.name}?'
+    })
+
+</script>

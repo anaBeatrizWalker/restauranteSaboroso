@@ -1,0 +1,11 @@
+<script src="/js/HcodeFormSave"></script>
+<script src="/js/HcodeGrid"></script>
+
+<script>
+
+    new HcodeGrid({
+        deleteURL: '/admin/emails/${data.id}',
+        deleteMessage: 'Deseja realmente excluir o e-mail ${data.email}?'
+    })
+
+</script>

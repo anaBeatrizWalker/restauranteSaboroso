@@ -1,0 +1,27 @@
+<script src="/js/HcodeFormSave.js"></script>
+<script src="/js/HcodeGrid.js"></script>
+
+<script>
+
+    new HcodeGrid({
+        deleteURL: '/admin/users/${data.id}',
+        deleteMessage: 'Deseja realmente excluir o usuário ${data.name}?',
+        listeners: {
+            buttonClick: (btn, data, e) =>{
+
+                document.querySelector('#modal-update-password form [name=id]').value = data.id
+
+                $('#modal-update-password').modal('show')
+            }
+        }
+    })
+    document.querySelectorAll('modal-update-password form').save({
+        success: ()=>{
+            window.location.reload()
+        },
+        failure: (err)=>{
+            alert(err)
+        }   
+    })
+
+</script>  
